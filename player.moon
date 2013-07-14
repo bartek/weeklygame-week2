@@ -16,7 +16,7 @@ class Player
         @destination = Vec2d 0, 0
 
     update: (dt) =>
-        @velocity = @destination if @destinaton
+        @velocity = Vec2d @box.x, @box.y - @destination
 
         delta = Vec2d @destination.x, @destination.y
         delta += @velocity
