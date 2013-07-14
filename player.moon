@@ -10,10 +10,9 @@ class Player
     speed: 500
 
     new: (@world, x, y) =>
-        @velocity = Vec2d 0, 0
         @box = Box x, y, @w, @h
 
-        @destination = Vec2d 0, 0
+        @destination = Vec2d x, y
 
     update: (dt) =>
         disx = @destination.x - @box.x
