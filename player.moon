@@ -7,7 +7,7 @@ export Player
 class Player
     w: 40
     h: 60
-    speed: 10
+    speed: 500
 
     new: (@world, x, y) =>
         @velocity = Vec2d 0, 0
@@ -16,31 +16,27 @@ class Player
         @destination = Vec2d 0, 0
 
     update: (dt) =>
-        @velocity = Vec2d @box.x, @box.y - @destination
+        disx = @destination.x - @box.x
+        disy = @destination.y - @box.y
 
-        delta = Vec2d @destination.x, @destination.y
-        delta += @velocity
+        delta = Vec2d disx, disy
+        delta = delta\normalized!
+        delta *= dt
 
         speed = @speed
-
-        delta *= dt
-        delta = delta\normalized!
 
         dx, dy = unpack delta
 
         dx *= speed
         dy *= speed
 
-        -- print "angle", math.atan2(dx, dy) * 180 / math.pi
+        distance = math.floor math.sqrt (disx * disx) + (disy * disy)
 
-        if math.floor(@box.x) > @destination.x
-            @box.x -= dx
-        elseif math.floor(@box.x) < @destination.x
+        if distance <= (speed * dt) / 2
+            @box.x = @destination.x
+            @box.y = @destination.y
+        else
             @box.x += dx
-
-        if math.floor(@box.y) > @destination.y
-            @box.y -= dy
-        elseif math.floor(@box.y) < @destination.y
             @box.y += dy
 
     set_destination: (x, y) =>
