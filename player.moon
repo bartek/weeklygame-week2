@@ -14,6 +14,9 @@ class Player
 
         @destination = Vec2d x, y
 
+    move: (dx, dy) =>
+        @world\collides self
+
     update: (dt) =>
         disx = @destination.x - @box.x
         disy = @destination.y - @box.y
@@ -25,6 +28,12 @@ class Player
         speed = @speed
 
         dx, dy = unpack delta
+
+        collided = @move unpack delta
+        if collided
+            -- temp stub for pushback. This wont quite work and can be
+            -- forced out of the push, but collisions!
+            @destination.y += 10
 
         dx *= speed
         dy *= speed
@@ -39,7 +48,7 @@ class Player
             @box.y += dy
 
     set_destination: (x, y) =>
-        @destination = Vec2d x, y
+        @destination = {x: x, y: y}
 
     draw: =>
         graphics.rectangle "fill",
