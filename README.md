@@ -26,3 +26,18 @@ First steps:
 * Constant movement of the screen with random, simple tiles placed on the map.
 * Squirrel on screen follows mouse click. Does not have to finish before moving
   onto a new click.
+
+Tile Placements
+-------
+
+What could occur here is we place a new tile down as soon as the top X of the
+last one is below the viewport. This allows us to keep a constant stream of
+tiles. The idea is that we randomly decide where to place openings. This value
+is more prevelant early on, but as the game hits "levels", the amount of tunnels
+decreases, eventually we only have ONE.
+
+When we place a blocker, we can decide to keep it going, or end it there.
+Perhaps a tile should have attributes that if it's "continued", then it keeps
+going for that range specified. It can also have an end tile. Basically, we'd be
+creating classes of tiles.
+
