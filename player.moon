@@ -14,7 +14,9 @@ class Player
     new: (@world, x, y) =>
         @box = Box x, y, @w, @h
         @destination = Vec2d x, y
-        sprite = Spriter assets.player, 48, 64
+
+        w, h = unpack assets.player.size
+        sprite = Spriter assets.player.path, w, h
         @a = StateAnim "up", {
             up: sprite\seq {0}
             down: sprite\seq {0}, 0, true

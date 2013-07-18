@@ -13,5 +13,8 @@ tilesettings = {
 }
 
 assets = {
-    player: "assets/chipmunk.png"
+    player: {
+        path: "assets/chipmunk.png",
+        size: {48, 64}
+    }
 }
