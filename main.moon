@@ -33,6 +33,10 @@ class World extends GameState
     new: =>
         @tiles = BoxedDrawList!
         @last_tile = nil
+        @level = @get_level!
+
+    get_level: () =>
+        -- Get the level based on a simple timelapse.
 
     -- auto set player to class instance.
     spawn_player: (@player) =>
@@ -109,6 +113,8 @@ class World extends GameState
         -- is past the y point.
         if @last_tile and @last_tile.y > screen.h
             @spawn_tiles!
+
+        print dt
 
         @tiles\update dt
 
