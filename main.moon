@@ -1,8 +1,13 @@
+import graphics from love
 import random from math
 
 require "player"
+require "levels"
 require "obstacles"
 require "lovekit.lists"
+
+-- when to level up
+TIMED_LEVEL_UP = 50
 
 class GameState
     attach: (love) =>
@@ -20,6 +25,12 @@ class GameState
 class BoxedDrawList extends DrawList
     show_boxes: true
 
+-- TODO They beat the game.
+class GameWon extends GameState
+    draw: =>
+        graphics.setColor 255, 255, 255
+        graphics.print "You beat the game.", 0, 0
+
 class World extends GameState
     -- tiles we're allowed to render.
     obstacles: {
@@ -33,10 +44,22 @@ class World extends GameState
     new: =>
         @tiles = BoxedDrawList!
         @last_tile = nil
-        @level = @get_level!
+        @level = 1
+        @level_config = levels[@level]
+        @time = 0
+        @start = love.timer.getTime()
 
-    get_level: () =>
-        -- Get the level based on a simple timelapse.
+    set_level: (dt) =>
+        -- Get the level based on a simple timelapse. Every N
+        -- seconds we move up a level.
+        @time += (love.timer.getFPS() * dt) / 12
+        if @time > TIMED_LEVEL_UP
+            @level += 1
+            @time = 0
+            @level_config = levels[@level]
+            if @level_config == nil
+                time = math.ceil(love.timer.getTime() - @start)
+                GameWon(self, time)\attach love
 
     -- auto set player to class instance.
     spawn_player: (@player) =>
@@ -70,7 +93,7 @@ class World extends GameState
         mt = nil
 
         -- build paths based on our toughness
-        path_count = 5
+        path_count = @level_config.paths
         for i=1,path_count
             mt = @build_block rows, columns, mt
 
@@ -90,7 +113,7 @@ class World extends GameState
             tile = nil
             for j, cell in ipairs row
                 tile = @pick_tile cell
-                tile = tile x, y
+                tile = tile self, x, y
 
                 @tiles\add tile
 
@@ -114,7 +137,7 @@ class World extends GameState
         if @last_tile and @last_tile.y > screen.h
             @spawn_tiles!
 
-        print dt
+        @set_level dt
 
         @tiles\update dt
 

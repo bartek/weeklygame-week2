@@ -16,9 +16,9 @@ export OBSTACLE
 -- Base class for a tile on the screen. All obstacles or path
 -- ways must sublcass this.
 class Tile extends Box
-    new: (@x, @y) =>
+    new: (@world, @x, @y) =>
     update: (dt) =>
-        self\move 0, 5
+        self\move 0, @world.level_config.tile_speed
 
         -- return true if item is still alive.
         if @y > screen.h
