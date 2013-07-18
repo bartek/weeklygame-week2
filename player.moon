@@ -1,6 +1,8 @@
 import graphics from love
 
 require "lovekit.geometry"
+require "lovekit.spriter"
+require "config"
 
 export Player
 
@@ -11,8 +13,12 @@ class Player
 
     new: (@world, x, y) =>
         @box = Box x, y, @w, @h
-
         @destination = Vec2d x, y
+        sprite = Spriter assets.player, 48, 64
+        @a = StateAnim "up", {
+            up: sprite\seq {0}
+            down: sprite\seq {0}, 0, true
+        }
 
     move: (dx, dy) =>
         @world\collides self
@@ -51,5 +57,5 @@ class Player
         @destination = {x: x, y: y}
 
     draw: =>
-        graphics.rectangle "fill",
-            @box.x, @box.y, @w, @h
+        graphics.setColor 255, 255, 255
+        @a\draw @box.x, @box.y
