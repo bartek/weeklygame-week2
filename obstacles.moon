@@ -98,17 +98,18 @@ walk_path = (mt, current, goal) ->
 
     walk_path mt, current, goal
 
-generate_block = (columns, rows, current, goal) ->
+generate_block = (columns, rows, current, goal, mt) ->
     -- Define a matrix that contains PATHs and OBSTACLEs, which will
     -- allow us to render a tileset.
     -- TODO: Allow existing mt to be passed, so we can generate
     -- blocks that have more than one path.
 
-    mt = {}
-    for i=1,rows
-        mt[i] = {}
-        for j=1,columns
-            mt[i][j] = OBSTACLE
+    if mt == nil
+        mt = {}
+        for i=1,rows
+            mt[i] = {}
+            for j=1,columns
+                mt[i][j] = OBSTACLE
 
     -- Setup initial.
     i, j = unpack current

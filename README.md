@@ -21,8 +21,9 @@ The game could simply last forever by randomly generating the upcoming
 obstacles. "Levels" can be triggered, which may increase the density of other
 things while lowering the availability of tunnels.
 
-First steps:
+Variables that can easily affect the toughness of the game:
 
-* Constant movement of the screen with random, simple tiles placed on the map.
-* Squirrel on screen follows mouse click. Does not have to finish before moving
-  onto a new click.
+* path_count, the amount of paths to deploy
+* movement speed of all the tiles.
+* MAX_DISTANCE when generating tiles. This would be very
+    tough for the user, but could allow them to reach far left/right

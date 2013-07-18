@@ -46,18 +46,29 @@ class World extends GameState
         elseif tile == 'o'
             return @paths[math.random 1, #@paths]
 
+    build_block: (rows, columns, mt) =>
+        -- build a block. Call it multiple times to build more than
+        -- one path, perhaps hilarity will ensue?
+        pivot = math.random 1, columns
+        current = {1, math.random (pivot - 1), (pivot + 1)}
+        goal = {rows, math.random (pivot - 1), (pivot + 1)}
+
+        mt = generate_block columns, rows, current, goal, mt
+        mt
+
     spawn_tiles: =>
         -- spawn tiles onto the screen by generating a block
         x = 0
 
         rows = math.random 5, 10
         columns = math.floor screen.w / tilesettings.w
-        pivot = math.random 1, columns
 
-        current = {1, math.random (pivot - 1), (pivot + 1)}
-        goal = {rows, math.random (pivot - 1), (pivot + 1)}
+        mt = nil
 
-        mt = generate_block columns, rows, current, goal
+        -- build paths based on our toughness
+        path_count = 5
+        for i=1,path_count
+            mt = @build_block rows, columns, mt
 
         -- debug
         for i, row in ipairs mt
