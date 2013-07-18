@@ -17,31 +17,99 @@ class GameState
     mousepressed: =>
 
 
+class BoxedDrawList extends DrawList
+    show_boxes: true
+
 class World extends GameState
+    -- tiles we're allowed to render.
+    obstacles: {
+        Obstacle,
+    }
+
+    paths: {
+        SinglePath,
+    }
+
     new: =>
-        @obstacles = ReuseList!
+        @tiles = BoxedDrawList!
+        @last_tile = nil
 
     -- auto set player to class instance.
     spawn_player: (@player) =>
+        @spawn_tiles!
+
+    -- pick an obstacle object to represent the tile passed.
+    pick_tile: (tile) =>
+        -- TODO: Constants.
+        if tile == 'x'
+            return @obstacles[math.random 1, #@obstacles]
+        elseif tile == 'o'
+            return @paths[math.random 1, #@paths]
+
+    spawn_tiles: =>
+        -- spawn tiles onto the screen by generating a block
+        x = 0
+
+        rows = math.random 5, 10
+        columns = math.floor screen.w / tilesettings.w
+        pivot = math.random 1, columns
+
+        current = {1, math.random (pivot - 1), (pivot + 1)}
+        goal = {rows, math.random (pivot - 1), (pivot + 1)}
+
+        mt = generate_block columns, rows, current, goal
+
+        -- debug
+        for i, row in ipairs mt
+           print ''
+           for j, cell in ipairs row
+                io.write(cell)
+
+        y = 0
+        xpadding = 0
+        ypadding = 0
+
+        last_tile = nil
+        for i, row in ipairs mt
+            x = 0
+            tile = nil
+            for j, cell in ipairs row
+                tile = @pick_tile cell
+                tile = tile x, y
+
+                @tiles\add tile
+
+                x += tile.w + xpadding
+
+            -- last run
+            if i == rows
+                last_tile = tile
+
+
+            -- adjust the y pos based on the last tiles height.
+            -- they are all the same!
+            y -= @tiles[#@tiles].h + ypadding
+
+        @last_tile = last_tile
+        @last_tile
 
     update: (dt) =>
-        doit = 0.5 * random!
+        -- Spawn the next set of tiles as soon as the last item in the list
+        -- is past the y point.
+        if @last_tile and @last_tile.y > screen.h
+            @spawn_tiles!
 
-        -- temp test dump of obstacles
-        if doit > 0.45
-            @obstacles\add Obstacle, random(0, 600), 0
-
-        @obstacles\update dt
+        @tiles\update dt
 
     collides: (thing) =>
-        for o in *@obstacles
-            if o\touches_box thing.box
+        for o in *@tiles
+            if o.obstacle and o\touches_box thing.box
                 return true
         return false
 
     draw: =>
+        @tiles\draw!
         @player\draw! if @player
-        @obstacles\draw!
 
 class Game extends GameState
     new: =>

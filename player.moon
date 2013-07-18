@@ -5,7 +5,7 @@ require "lovekit.geometry"
 export Player
 
 class Player
-    w: 40
+    w: 30
     h: 60
     speed: 500
 
