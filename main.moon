@@ -31,6 +31,31 @@ class GameWon extends GameState
         graphics.setColor 255, 255, 255
         graphics.print "You beat the game.", 0, 0
 
+-- simple container to manage level.
+class Level
+    config: {}
+
+    new: (@game) =>
+        @level = 1
+        @config = levels[@level]
+        @time = 0
+        @start = love.timer.getTime()
+
+    update: (dt) =>
+        -- Get the level based on a simple timelapse. Every N
+        -- seconds we move up a level.
+        @time += (love.timer.getFPS() * dt) / 12
+        if @time < TIMED_LEVEL_UP
+            return @time
+
+        @level += 1
+        @time = 0
+        @config = levels[@level]
+        if @config == nil
+            time = math.ceil(love.timer.getTime() - @start)
+            GameWon(@game, time)\attach love
+    
+
 class World extends GameState
     -- tiles we're allowed to render.
     obstacles: {
@@ -44,22 +69,8 @@ class World extends GameState
     new: =>
         @tiles = BoxedDrawList!
         @last_tile = nil
-        @level = 1
-        @level_config = levels[@level]
-        @time = 0
-        @start = love.timer.getTime()
 
-    set_level: (dt) =>
-        -- Get the level based on a simple timelapse. Every N
-        -- seconds we move up a level.
-        @time += (love.timer.getFPS() * dt) / 12
-        if @time > TIMED_LEVEL_UP
-            @level += 1
-            @time = 0
-            @level_config = levels[@level]
-            if @level_config == nil
-                time = math.ceil(love.timer.getTime() - @start)
-                GameWon(self, time)\attach love
+        @level = Level!
 
     -- auto set player to class instance.
     spawn_player: (@player) =>
@@ -96,7 +107,7 @@ class World extends GameState
         mt = nil
 
         -- build paths based on our toughness
-        path_count = @level_config.paths
+        path_count = @level.config.paths
         for i=1,path_count
             mt = @build_block rows, columns, mt
 
@@ -136,8 +147,7 @@ class World extends GameState
         if @last_tile and @last_tile.y > screen.h
             @spawn_tiles!
 
-        @set_level dt
-
+        @level\update dt
         @tiles\update dt
 
     collides: (thing) =>

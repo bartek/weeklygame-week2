@@ -19,7 +19,7 @@ export OBSTACLE
 class Tile extends Box
     new: (@world, @x, @y) =>
     update: (dt) =>
-        self\move 0, @world.level_config.tile_speed
+        self\move 0, @world.level.config.tile_speed
 
         -- return true if item is still alive.
         if @y > screen.h
