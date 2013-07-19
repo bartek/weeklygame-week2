@@ -26,17 +26,9 @@ class Player
     move: (dx, dy) =>
         collided_x = false
         collided_y = false
-        while @world\collides self
-            collided_y = true
-            @box.y += 1
-            @destination.y += 1
-
-            if dx < 0 and dy == 0
-                @box.x += 1
-                collided_x = true
-            elseif dx > 0 and dy == 0
-                @box.x -= 1
-                collided_x = true
+        for o in *@world.tiles
+            if o.obstacle and o\touches_box @ and o.box\bottom_of @
+                print "COLLIDING FROM THE BOTTOM"
 
         collided_x, collided_y
 
