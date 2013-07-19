@@ -77,7 +77,6 @@ walk_path = (mt, current, goal) ->
     else
         options[#options + 1] = 'left'
     
-    -- TODO: review
     if mt[i][j + 1] == nil or math.abs(goal[2] - (j + 1)) >= MAX_DISTANCE
         -- Can't go right
         pass
@@ -89,7 +88,7 @@ walk_path = (mt, current, goal) ->
         pass
     else
         -- TODO: Should be variable.
-        for i=1, 10
+        for i=1, 1
             options[#options + i] = 'up'
 
     -- Empty options means we can't go anywhere and the game is broken :(
