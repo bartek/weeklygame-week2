@@ -1,11 +1,13 @@
 import audio, graphics from love
 import random from math
 
+require "config"
 require "player"
 require "levels"
 require "obstacles"
 require "lovekit.lists"
 require "lovekit.image"
+require "lovekit.viewport"
 
 -- when to level up
 TIMED_LEVEL_UP = 50
@@ -57,7 +59,6 @@ class Level
         @level += 1
         @time = 0
         @config = levels[@level]
-        print "level config", @config
         if @config == nil
             time = math.ceil(love.timer.getTime() - @start)
             GameWon(@game, time)\attach love
@@ -74,7 +75,8 @@ class World extends GameState
     }
 
     new: =>
-        @bg = imgfy "assets/bg.jpg"
+        config = {screen: screen}
+        @bg = TiledBackground "assets/grass.png", config
         @tiles = BoxedDrawList!
         @last_tile = nil
 
