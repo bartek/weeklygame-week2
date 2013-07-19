@@ -1,13 +1,15 @@
 import audio, graphics from love
 import random from math
 
+require "lovekit.lists"
+require "lovekit.image"
+require "lovekit.viewport"
+
 require "config"
 require "player"
 require "levels"
 require "obstacles"
-require "lovekit.lists"
-require "lovekit.image"
-require "lovekit.viewport"
+require "ui"
 
 -- when to level up
 TIMED_LEVEL_UP = 50
@@ -34,6 +36,15 @@ class GameWon extends GameState
         graphics.setColor 255, 255, 255
         graphics.print "You beat the game.", 0, 0
 
+-- Didn't win!
+class GameOver extends GameState
+    new: (@game, time) =>
+        @time = time
+
+    draw: =>
+        graphics.setColor 255, 255, 255
+        graphics.print "You lost the game after " .. @time .. " seconds",
+            screen.w, screen.h / 2
 -- simple container to manage level.
 class Level
     config: {}
@@ -77,6 +88,8 @@ class World extends GameState
     new: =>
         config = {screen: screen}
         @bg = TiledBackground "assets/grass.png", config
+        @health = HealthBar!
+
         @tiles = BoxedDrawList!
         @last_tile = nil
 
@@ -159,6 +172,11 @@ class World extends GameState
         @tiles = DrawList!
         @spawn_tiles!
 
+        @health\decrease!
+        if @health.lives < 0
+            time = math.ceil(love.timer.getTime() - @level.start)
+            GameOver(@game, time)\attach love
+
         @level\reset!
         love.timer.sleep(1)
         @freeze = false
@@ -188,6 +206,7 @@ class World extends GameState
     draw: =>
         @bg\draw 0, 0
         @tiles\draw!
+        @health\draw!
         @player\draw! if @player
 
 
