@@ -11,10 +11,10 @@ levels = {
     },
     {
         paths: 3
-        tile_speed: 14,
+        tile_speed: 12,
     },
     {
         paths: 1,
-        tile_speed: 20,
+        tile_speed: 18,
     }
 }

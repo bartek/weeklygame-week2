@@ -88,7 +88,7 @@ walk_path = (mt, current, goal) ->
         pass
     else
         -- TODO: Should be variable.
-        for i=1, 1
+        for i=1, 10
             options[#options + i] = 'up'
 
     -- Empty options means we can't go anywhere and the game is broken :(
