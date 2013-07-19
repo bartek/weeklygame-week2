@@ -1,4 +1,4 @@
-import graphics from love
+import audio, graphics from love
 import random from math
 
 require "player"
@@ -107,7 +107,7 @@ class World extends GameState
         -- spawn tiles onto the screen by generating a block
         x = 0
         y = 0
-        xpadding = 10
+        xpadding = 0
         ypadding = 0
 
         rows = math.random 5, 10
@@ -207,6 +207,11 @@ class Game extends GameState
 
 love.load = ->
     graphics.setMode(screen.w, screen.h)
+
+    source = audio.newSource "assets/RoccoW_-_Pumped.mp3", "streaming"
+    source\setVolume(0.5)
+    source\setLooping true
+    source\play!
 
     game = Game!
     game\attach love

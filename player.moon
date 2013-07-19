@@ -7,7 +7,7 @@ require "config"
 export Player
 
 class Player
-    w: 48
+    w: 34
     h: 60
     speed: 500
 

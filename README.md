@@ -27,3 +27,5 @@ Variables that can easily affect the toughness of the game:
 * movement speed of all the tiles.
 * MAX_DISTANCE when generating tiles. This would be very
     tough for the user, but could allow them to reach far left/right
+
+Chiptunes from [freemusicarchive.org](http://freemusicarchive.org/music/RoccoW/)
