@@ -173,13 +173,13 @@ class World extends GameState
         @spawn_tiles!
 
         @health\decrease!
-        if @health.lives < 0
-            time = math.ceil(love.timer.getTime() - @level.start)
-            GameOver(@game, time)\attach love
-
         @level\reset!
         love.timer.sleep(1)
         @freeze = false
+
+        if @health.lives < 0
+            time = math.ceil(love.timer.getTime() - @level.start)
+            GameOver(@game, time)\attach love
 
     update: (dt) =>
         -- Spawn the next set of tiles as soon as the last item in the list

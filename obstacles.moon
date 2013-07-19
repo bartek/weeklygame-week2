@@ -71,22 +71,22 @@ walk_path = (mt, current, goal) ->
         return mt
     
     -- TODO: review
-    if mt[i][j - 1] == nil or math.abs(goal[2] - (j - 1)) >= MAX_DISTANCE
+    if not mt[i][j - 1] == nil or math.abs(goal[2] - (j - 1)) >= MAX_DISTANCE
         -- Can't go left
-        print "NO LEFT"
+        pass
     else
         options[#options + 1] = 'left'
     
     -- TODO: review
     if mt[i][j + 1] == nil or math.abs(goal[2] - (j + 1)) >= MAX_DISTANCE
         -- Can't go right
-        print "NO RIGHT"
+        pass
     else
         options[#options + 1] = 'right'
 
     if mt[i + 1] == nil
         -- Can't go up
-        print "NO UP"
+        pass
     else
         -- TODO: Should be variable.
         for i=1, 10
