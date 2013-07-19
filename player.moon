@@ -12,6 +12,7 @@ class Player
     speed: 500
 
     new: (@world, x, y) =>
+        @spawn = {x, y}
         @box = Box x, y, @w, @h
         @destination = Vec2d x, y
 
@@ -23,16 +24,21 @@ class Player
 
 
     move: (dx, dy) =>
-        collided = false
+        collided_x = false
+        collided_y = false
         while @world\collides self
+            collided_y = true
             @box.y += 1
-            collided = true
+            @destination.y += 1
 
             if dx < 0 and dy == 0
                 @box.x += 1
+                collided_x = true
             elseif dx > 0 and dy == 0
                 @box.x -= 1
-        collided
+                collided_x = true
+
+        collided_x, collided_y
 
     update: (dt) =>
         disx = @destination.x - @box.x
@@ -46,9 +52,7 @@ class Player
 
         dx, dy = unpack delta
 
-        collided = @move unpack delta
-        if collided
-            "Collided but updating"
+        collided_x, collided_y = @move unpack delta
 
         dx *= speed
         dy *= speed
@@ -61,6 +65,10 @@ class Player
         else
             @box.x += dx
             @box.y += dy
+
+    set_loc: (x, y) =>
+        @box.x = x
+        @box.y = y
 
     set_destination: (x, y) =>
         @destination = {x: x, y: y}

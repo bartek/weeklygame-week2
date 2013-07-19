@@ -70,6 +70,7 @@ class World extends GameState
         @tiles = BoxedDrawList!
         @last_tile = nil
 
+        @freeze = false
         @level = Level!
 
     -- auto set player to class instance.
@@ -141,9 +142,25 @@ class World extends GameState
         @last_tile = last_tile
         @last_tile
 
+    reset: () =>
+        @freeze = true
+        @player\set_loc unpack @player.spawn
+        @player\set_destination unpack @player.spawn
+        @tiles = DrawList!
+        @spawn_tiles!
+        if @level.level > 1
+            @level.level -= 1
+        @freeze = false
+
     update: (dt) =>
         -- Spawn the next set of tiles as soon as the last item in the list
         -- is past the y point.
+        if @freeze
+            return true
+
+        if @player.box.y > screen.h
+            @reset!
+
         if @last_tile and @last_tile.y > screen.h
             @spawn_tiles!
 
@@ -163,7 +180,7 @@ class World extends GameState
 class Game extends GameState
     new: =>
         @w = World!
-        @player = Player @w, 100, 100
+        @player = Player @w, screen.w / 2, screen.h / 1.2
         @w\spawn_player @player
 
     mousepressed: (x, y, button) =>
