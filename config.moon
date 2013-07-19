@@ -16,4 +16,5 @@ assets = {
     player: {"assets/chipmunk.png", 48, 64},
     grass: {"assets/grass.png", 48, 48},
     rock: {"assets/rock.png", 48, 48},
+    coin: {"assets/coin.png", 48, 48}
 }

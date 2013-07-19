@@ -15,6 +15,7 @@ class Player
         @spawn = {x, y}
         @box = Box x, y, @w, @h
         @destination = Vec2d x, y
+        @score = 0
 
         sprite = Spriter unpack assets.player
         @a = StateAnim "up", {
@@ -22,6 +23,8 @@ class Player
             down: sprite\seq {0}, 0, true
         }
 
+    up_score: (n=1) =>
+        @score += n
 
     move: (dx, dy) =>
         collided = @world\collides self

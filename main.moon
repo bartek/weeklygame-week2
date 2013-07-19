@@ -38,13 +38,18 @@ class GameWon extends GameState
 
 -- Didn't win!
 class GameOver extends GameState
-    new: (@game, time) =>
-        @time = time
+    new: (@game, @player) =>
 
     draw: =>
+        x = 0
+        y = 0
         graphics.setColor 255, 255, 255
-        graphics.print "You lost the game after " .. @time .. " seconds",
-            screen.w, screen.h / 2
+        graphics.print "You lost!", (screen.w / 2) + x, (screen.h / 2) + y
+
+        y += 50
+        graphics.print "But you collected " .. @player.score .. " acorns!",
+            (screen.w / 2) + x, (screen.h / 2) + y
+
 -- simple container to manage level.
 class Level
     config: {}
@@ -179,7 +184,7 @@ class World extends GameState
 
         if @health.lives < 0
             time = math.ceil(love.timer.getTime() - @level.start)
-            GameOver(@game, time)\attach love
+            GameOver(@game, @player)\attach love
 
     update: (dt) =>
         -- Spawn the next set of tiles as soon as the last item in the list
@@ -226,6 +231,39 @@ class Game extends GameState
     draw: =>
         @w\draw!
 
+class Menu extends GameState
+    new: =>
+
+    update: (dt) =>
+        if @game
+            print "load time", dt
+            @game\attach love
+
+    keypressed: (key, code) =>
+        if key == "return"
+            @game = Game!
+
+        os.exit! if key == "escape"
+
+    draw: =>
+        x = -70
+        y = 0
+        graphics.setColor 255, 255, 255
+        graphics.print "BUDGETSOFT PRESENTS",
+            (screen.w / 2) + x, (screen.h / 2) + y
+        y += 25
+
+        graphics.print "CHIPMUNK JAM",
+            (screen.w / 2) + x, (screen.h / 2) + y
+
+        y += 50
+        graphics.print "Use the mouse. Dodge rocks, collect acorns.",
+            (screen.w / 2) + x, (screen.h / 2) + y
+
+        y += 25
+        graphics.print "(Hit enter to go!)",
+            (screen.w / 2) + x, (screen.h / 2) + y
+
 love.load = ->
     graphics.setMode(screen.w, screen.h)
 
@@ -234,5 +272,6 @@ love.load = ->
     source\setLooping true
     source\play!
 
-    game = Game!
+    game = Menu!
     game\attach love
+

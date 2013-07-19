@@ -38,18 +38,52 @@ class Obstacle extends Tile
     draw: =>
         @sprite\draw @x, @y if @sprite
 
-
 class Rock extends Obstacle
     new: (...) =>
         super ...
         @sprite = imgfy unpack assets.rock
+
+
+class Collectible extends Tile
+    w: 48
+    h: 48
+
+    draw: =>
+        @sprite\draw @x, @y if @sprite
+
+class Coin extends Collectible
+    new: (...) =>
+        super ...
+        @sprite = imgfy unpack assets.coin
+        @dead = false
+
+    update: (dt) =>
+        if @world.player.box\touches_box self
+            @dead = true
+        super dt
 
 class SinglePath extends Tile
     obstacle: false
     w: 48
     h: 48
 
+    new: (...) =>
+        super ...
+
+        @collectible = nil
+        -- Decide if there should be a collectible here.
+        if math.random! > 0.5
+            @collectible = Coin @world, @x, @y
+
+    update: (dt) =>
+        @collectible\update dt if @collectible
+        if @collectible and @collectible.dead == true
+            @collectible = nil
+            @world.player\up_score!
+        super dt
+
     draw: =>
+        @collectible\draw! if @collectible
 
 walk_path = (mt, current, goal) ->
     options = {}
