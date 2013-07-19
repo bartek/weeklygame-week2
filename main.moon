@@ -5,6 +5,7 @@ require "player"
 require "levels"
 require "obstacles"
 require "lovekit.lists"
+require "lovekit.image"
 
 -- when to level up
 TIMED_LEVEL_UP = 50
@@ -41,6 +42,11 @@ class Level
         @time = 0
         @start = love.timer.getTime()
 
+    reset: () =>
+        if @level > 1
+            @level -= 1
+        @time = 0
+
     update: (dt) =>
         -- Get the level based on a simple timelapse. Every N
         -- seconds we move up a level.
@@ -51,6 +57,7 @@ class Level
         @level += 1
         @time = 0
         @config = levels[@level]
+        print "level config", @config
         if @config == nil
             time = math.ceil(love.timer.getTime() - @start)
             GameWon(@game, time)\attach love
@@ -67,6 +74,7 @@ class World extends GameState
     }
 
     new: =>
+        @bg = imgfy "assets/bg.jpg"
         @tiles = BoxedDrawList!
         @last_tile = nil
 
@@ -148,8 +156,9 @@ class World extends GameState
         @player\set_destination unpack @player.spawn
         @tiles = DrawList!
         @spawn_tiles!
-        if @level.level > 1
-            @level.level -= 1
+
+        @level\reset!
+        love.timer.sleep(1)
         @freeze = false
 
     update: (dt) =>
@@ -170,12 +179,15 @@ class World extends GameState
     collides: (thing) =>
         for o in *@tiles
             if o.obstacle and o\touches_box thing.box
-                return true
+                -- return the object its colliding with
+                return o
         return false
 
     draw: =>
+        @bg\draw 0, 0
         @tiles\draw!
         @player\draw! if @player
+
 
 class Game extends GameState
     new: =>

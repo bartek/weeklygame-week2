@@ -24,13 +24,26 @@ class Player
 
 
     move: (dx, dy) =>
-        collided_x = false
-        collided_y = false
-        for o in *@world.tiles
-            if o.obstacle and o\touches_box @ and o.box\bottom_of @
-                print "COLLIDING FROM THE BOTTOM"
+        collided = @world\collides self
+        if collided == false
+            return false
+        else
+            moved = false
+            if collided.y < @box.y
+                @box.y += 1
+                @destination.y += 1
+                moved = true
 
-        collided_x, collided_y
+            if dx < 0 and dy == 0
+                @box.x += 1
+                moved = true
+            elseif dx > 0 and dy == 0
+                @box.x -= 1
+                moved = true
+
+            if moved == true
+                @move dx, dy
+        return collided
 
     update: (dt) =>
         disx = @destination.x - @box.x
@@ -44,7 +57,7 @@ class Player
 
         dx, dy = unpack delta
 
-        collided_x, collided_y = @move unpack delta
+        collided = @move unpack delta
 
         dx *= speed
         dy *= speed
