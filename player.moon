@@ -7,7 +7,7 @@ require "config"
 export Player
 
 class Player
-    w: 30
+    w: 48
     h: 60
     speed: 500
 
@@ -15,15 +15,24 @@ class Player
         @box = Box x, y, @w, @h
         @destination = Vec2d x, y
 
-        w, h = unpack assets.player.size
-        sprite = Spriter assets.player.path, w, h
+        sprite = Spriter unpack assets.player
         @a = StateAnim "up", {
             up: sprite\seq {0}
             down: sprite\seq {0}, 0, true
         }
 
+
     move: (dx, dy) =>
-        @world\collides self
+        collided = false
+        while @world\collides self
+            @box.y += 1
+            collided = true
+
+            if dx < 0 and dy == 0
+                @box.x += 1
+            elseif dx > 0 and dy == 0
+                @box.x -= 1
+        collided
 
     update: (dt) =>
         disx = @destination.x - @box.x
@@ -39,9 +48,7 @@ class Player
 
         collided = @move unpack delta
         if collided
-            -- temp stub for pushback. This wont quite work and can be
-            -- forced out of the push, but collisions!
-            @destination.y += 10
+            "Collided but updating"
 
         dx *= speed
         dy *= speed

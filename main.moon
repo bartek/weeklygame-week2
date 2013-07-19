@@ -34,7 +34,7 @@ class GameWon extends GameState
 class World extends GameState
     -- tiles we're allowed to render.
     obstacles: {
-        Obstacle,
+        Rock,
     }
 
     paths: {
@@ -86,9 +86,12 @@ class World extends GameState
     spawn_tiles: =>
         -- spawn tiles onto the screen by generating a block
         x = 0
+        y = 0
+        xpadding = 10
+        ypadding = 0
 
         rows = math.random 5, 10
-        columns = math.floor screen.w / tilesettings.w
+        columns = math.floor screen.w / (tilesettings.w + xpadding)
 
         mt = nil
 
@@ -102,10 +105,6 @@ class World extends GameState
            print ''
            for j, cell in ipairs row
                 io.write(cell)
-
-        y = 0
-        xpadding = 0
-        ypadding = 0
 
         last_tile = nil
         for i, row in ipairs mt
@@ -168,5 +167,7 @@ class Game extends GameState
         @w\draw!
 
 love.load = ->
+    graphics.setMode(screen.w, screen.h)
+
     game = Game!
     game\attach love

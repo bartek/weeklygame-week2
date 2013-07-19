@@ -1,13 +1,14 @@
 import graphics from love
 
 require "lovekit.geometry"
+require "lovekit.image"
 require "config"
 
 PATH = 'o'
 OBSTACLE = 'x'
 MAX_DISTANCE = 2
 
-export Obstacle
+export Rock
 export SinglePath
 export generate_block
 export PATH
@@ -35,15 +36,26 @@ class Obstacle extends Tile
     w: 48
     h: 48
 
+    draw: =>
+        @sprite\draw @x, @y
+
+
+class Rock extends Obstacle
+    new: (...) =>
+        super ...
+        @sprite = imgfy unpack assets.rock
+
 class SinglePath extends Tile
     obstacle: false
     w: 48
     h: 48
 
+    new: (...) =>
+        super ...
+        @sprite = imgfy unpack assets.grass
+
     draw: =>
-        love.graphics.setColor(66, 23, 99)
-        graphics.rectangle "fill",
-            @x, @y, @w, @h
+        @sprite\draw @x, @y
 
 walk_path = (mt, current, goal) ->
     options = {}
