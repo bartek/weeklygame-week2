@@ -18,7 +18,7 @@ class Player
 
         sprite = Spriter unpack assets.player
         @a = StateAnim "up", {
-            up: sprite\seq {0}
+            up: sprite\seq {0,1}, 0.1
             down: sprite\seq {0}, 0, true
         }
 
@@ -46,6 +46,8 @@ class Player
         return collided
 
     update: (dt) =>
+        @a\update dt
+
         disx = @destination.x - @box.x
         disy = @destination.y - @box.y
 

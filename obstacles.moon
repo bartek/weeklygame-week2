@@ -27,7 +27,6 @@ class Tile extends Box
         true
 
     draw: =>
-        love.graphics.setColor(255, 255, 255)
         graphics.rectangle "fill",
             @x, @y, @w, @h
 
@@ -37,7 +36,7 @@ class Obstacle extends Tile
     h: 48
 
     draw: =>
-        @sprite\draw @x, @y
+        @sprite\draw @x, @y if @sprite
 
 
 class Rock extends Obstacle
@@ -50,12 +49,7 @@ class SinglePath extends Tile
     w: 48
     h: 48
 
-    new: (...) =>
-        super ...
-        @sprite = imgfy unpack assets.grass
-
     draw: =>
-        @sprite\draw @x, @y
 
 walk_path = (mt, current, goal) ->
     options = {}

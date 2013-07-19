@@ -6,7 +6,7 @@ export HealthBar
 class HealthBar
     new: (lives=3) =>
         @lives = lives
-        @sprite = imgfy "assets/chipmunk.png"
+        @sprite = imgfy "assets/lives.png"
 
     decrease: () =>
         @lives -= 1
